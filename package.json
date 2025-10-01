@@ -1,0 +1,29 @@
+{
+  "name": "fet-bay-marketplace",
+  "version": "1.0.0",
+  "description": "Production-ready MVP marketplace with Stripe Connect and Supabase",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "functions/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"yarn workspace web dev\" \"yarn workspace functions dev\"",
+    "build": "yarn workspace web build",
+    "preview": "yarn workspace web preview",
+    "db:generate": "yarn workspace supabase db:generate",
+    "db:push": "yarn workspace supabase db:push",
+    "db:seed": "yarn workspace supabase db:seed",
+    "functions:deploy": "yarn workspace functions deploy",
+    "functions:dev": "yarn workspace functions dev",
+    "test": "yarn workspace web test && yarn workspace functions test",
+    "test:web": "yarn workspace web test",
+    "test:functions": "yarn workspace functions test",
+    "lint": "yarn workspace web lint && yarn workspace functions lint",
+    "type-check": "yarn workspace web type-check"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "packageManager": "yarn@4.0.0"
+}

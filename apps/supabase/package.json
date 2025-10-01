@@ -1,0 +1,16 @@
+{
+  "name": "supabase",
+  "version": "1.0.0",
+  "description": "Supabase database schema and migrations",
+  "scripts": {
+    "db:generate": "supabase gen types typescript --local > ../web/src/types/database.types.ts",
+    "db:push": "supabase db push",
+    "db:seed": "supabase db seed",
+    "db:reset": "supabase db reset",
+    "start": "supabase start",
+    "stop": "supabase stop"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  }
+}
