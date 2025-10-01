@@ -1,0 +1,21 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "Supabase Edge Functions for Stripe integration",
+  "scripts": {
+    "dev": "supabase functions serve --env-file .env.local",
+    "deploy": "supabase functions deploy --env-file .env.local",
+    "deploy:create-connect-link": "supabase functions deploy create-connect-link --env-file .env.local",
+    "deploy:create-checkout": "supabase functions deploy create-checkout --env-file .env.local",
+    "deploy:stripe-webhook": "supabase functions deploy stripe-webhook --env-file .env.local",
+    "deploy:admin-actions": "supabase functions deploy admin-actions --env-file .env.local",
+    "test": "deno task test",
+    "test:watch": "deno task test:watch",
+    "lint": "deno task lint",
+    "fmt": "deno task fmt"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "stripe": "^14.0.0"
+  }
+}
