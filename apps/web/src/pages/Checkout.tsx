@@ -222,10 +222,18 @@ function CheckoutForm({ listing }: { listing: Listing }) {
                 style: {
                   base: {
                     fontSize: '16px',
-                    color: '#424770',
+                    color: '#ffffff',
+                    backgroundColor: 'transparent',
                     '::placeholder': {
-                      color: '#aab7c4',
+                      color: '#9ca3af',
                     },
+                    ':focus': {
+                      color: 'hsl(var(--crimson-glow))',
+                    },
+                  },
+                  invalid: {
+                    color: '#ff6b6b',
+                    iconColor: '#ff6b6b',
                   },
                 },
               }}
@@ -241,9 +249,9 @@ function CheckoutForm({ listing }: { listing: Listing }) {
         <Button 
           type="submit" 
           disabled={!stripe || !clientSecret || loading}
-          className="px-8"
+          className="px-12 py-6 text-lg font-[Playfair Display] neon-border sensual-glow hover:bg-[hsl(var(--crimson-glow))]"
         >
-          {loading ? 'Processing...' : 'Pay Now'}
+          {loading ? 'Processing Payment...' : 'Complete Purchase'}
         </Button>
       </div>
     </form>

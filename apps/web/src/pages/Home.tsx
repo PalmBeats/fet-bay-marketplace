@@ -125,9 +125,25 @@ export default function Home() {
                     <CardDescription className="line-clamp-3">{listing.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-primary">{formatPrice(listing.price_amount, listing.currency)}</span>
-                      <Button asChild><Link to={`/listing/${listing.id}`}>View Details</Link></Button>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold text-primary">{formatPrice(listing.price_amount, listing.currency)}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          asChild 
+                          className="flex-1 neon-border hover:bg-[hsl(var(--crimson-glow))] sensual-glow"
+                        >
+                          <Link to={`/checkout/${listing.id}`}>Buy Now</Link>
+                        </Button>
+                        <Button 
+                          asChild 
+                          variant="outline" 
+                          className="flex-1 border-[hsl(var(--crimson-glow))] hover:bg-[hsl(var(--crimson-glow))] hover:text-white"
+                        >
+                          <Link to={`/listing/${listing.id}`}>Details</Link>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
