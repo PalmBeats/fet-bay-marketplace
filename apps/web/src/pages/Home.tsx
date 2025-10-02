@@ -58,25 +58,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {isDevMode && (
-        <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 text-yellow-200 px-6 py-4 rounded-lg mb-8 silky-card">
-          <div className="flex items-start">
-            <svg className="w-6 h-6 mr-3 mt-0.5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9-1a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-            </svg>
-            <div>
-              <div className="font-semibold text-lg mb-2 text-yellow-100">🚧 Development Mode Notice</div>
-              <p className="text-sm mb-3">Using mock data for testing. For production payments:</p>
-              <ul className="text-sm space-y-1 list-disc list-inside ml-2 text-yellow-100/80">
-                <li><strong>Sellers must complete Stripe Connect setup</strong> before receiving payments</li>
-                <li>Go to <span className="font-mono bg-yellow-800/30 px-2 py-0.5 rounded text-xs">/account</span> → "Set Up Payments"</li>
-                <li>Complete onboarding to enable "Buy Now" purchases</li>
-                <li>Without setup, buyers get redirected to login instead of checkout</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           <div className="pt-16 pb-16 text-center ambient-glow">
