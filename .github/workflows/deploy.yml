@@ -58,11 +58,7 @@ jobs:
         uses: actions/configure-pages@v4
         
       - name: Debug: Show dist contents
-        run: |
-          echo "=== DIST CONTENTS ==="
-          ls -la apps/web/dist/
-          echo "=== ASSETS CONTENTS ==="
-          ls -la apps/web/dist/assets/ || echo "No assets folder found"
+        run: echo "=== DIST CONTENTS ===" && ls -la apps/web/dist/ && echo "=== ASSETS CONTENTS ===" && ls -la apps/web/dist/assets/ || echo "No assets folder found"
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
