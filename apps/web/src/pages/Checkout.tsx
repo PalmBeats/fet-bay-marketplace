@@ -47,15 +47,19 @@ function CheckoutForm({ listing }: { listing: Listing }) {
   }, [listing])
 
   const createPaymentIntent = async () => {
+    console.log('=== CREATE PAYMENT INTENT DEBUG ===')
     try {
       const { data: { session } } = await supabase.auth.getSession()
+      console.log('Session for payment intent:', session?.user?.id, 'session exists:', !!session)
+      
       if (!session) {
-        console.error('No session available in createPaymentIntent')
+        console.error('❌ No session available in createPaymentIntent')
         alert('Session expired. Please log in again.')
         navigate('/auth')
         return
       }
 
+      console.log('✅ Session exists, creating payment intent for listing:', listing.id)
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       const response = await fetch(`${supabaseUrl}/functions/v1/create-checkout`, {
         method: 'POST',
@@ -69,17 +73,22 @@ function CheckoutForm({ listing }: { listing: Listing }) {
         }),
       })
 
+      console.log('Payment intent response status:', response.status)
       const result = await response.json()
+      console.log('Payment intent result:', result)
 
       if (!response.ok) {
         if (result.needs_onboarding) {
+          console.log('❌ Seller needs Stripe onboarding')
           alert(`⚠️ Seller Payment Setup Required\n\nThis seller hasn't completed their payment account setup yet.\n\nPlease contact the seller to complete Stripe onboarding before purchasing.\n\nYou'll be redirected to the marketplace.`)
           navigate('/')
           return
         }
+        console.error('❌ Payment intent creation failed:', result.error)
         throw new Error(result.error || 'Failed to create payment intent')
       }
 
+      console.log('✅ Payment intent created successfully')
       setClientSecret(result.client_secret)
     } catch (error) {
       console.error('Error creating payment intent:', error)
@@ -263,30 +272,42 @@ function CheckoutForm({ listing }: { listing: Listing }) {
 export default function Checkout() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { user, isBanned } = useAuth()
+  const { user, isBanned, loading: authLoading } = useAuth()
   const [listing, setListing] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(true)
-
+  
   useEffect(() => {
-    console.log('Checkout useEffect - user:', user?.id, 'user exists:', !!user)
+    console.log('=== CHECKOUT DEBUG ===')
+    console.log('Checkout useEffect - user:', user?.id, 'user exists:', !!user, 'authLoading:', authLoading)
+    console.log('isBanned:', isBanned)
+    console.log('listing id:', id)
+    
+    // Wait for auth to finish loading
+    if (authLoading) {
+      console.log('⏳ Auth still loading, waiting...')
+      return
+    }
     
     if (!user) {
-      console.log('No user found in Checkout - redirecting to auth')
+      console.log('❌ No user found in Checkout - redirecting to auth')
       navigate('/auth')
       return
     }
     
     if (isBanned) {
+      console.log('❌ User is banned')
       alert('Your account is banned. You cannot make purchases.')
       navigate('/')
       return
     }
 
     if (id) {
-      console.log('User exists, fetching listing for id:', id)
+      console.log('✅ User exists, fetching listing for id:', id)
       fetchListing()
+    } else {
+      console.log('❌ Invalid checkout URL - missing listing id')
     }
-  }, [id, user, isBanned, navigate])
+  }, [id, user, isBanned, navigate, authLoading])
 
   const fetchListing = async () => {
     try {
@@ -318,10 +339,14 @@ export default function Checkout() {
     }
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading...</div>
+        <div className="text-center">
+          <div className="text-lg mb-2">
+            {authLoading ? 'Checking authentication...' : 'Loading checkout...'}
+          </div>
+        </div>
       </div>
     )
   }
