@@ -52,7 +52,7 @@ jobs:
           VITE_INDEV_MODE: 'FALSE'
           
       - name: Build backend schemas/types
-        run: cd apps/web && yarn gen-types
+        run: echo "Skip type generation for now"
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
