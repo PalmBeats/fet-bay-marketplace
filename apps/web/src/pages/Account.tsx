@@ -151,11 +151,30 @@ export default function Account() {
 
     setRefreshingStatus(true)
     try {
-      console.log('Refreshing account data from database...')
+      console.log('Checking Stripe account status...')
       
-      // Force refresh account data from database
-      await fetchAccountData()
-      alert('Account status refreshed! Check your payment setup status.')
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) return
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      const response = await fetch(`${supabaseUrl}/functions/v1/check-account-status`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        }
+      })
+
+      const result = await response.json()
+      
+      if (response.ok) {
+        console.log('Account status response:', result)
+        // Refresh local account data to show updated status
+        await fetchAccountData()
+        alert(`Status updated: ${result.message}`)
+      } else {
+        throw new Error(result.error || 'Failed to check account status')
+      }
     } catch (error) {
       console.error('Error refreshing account data:', error)
       alert('Failed to refresh account status. Please try again.')
