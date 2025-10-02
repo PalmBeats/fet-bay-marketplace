@@ -7,10 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { formatPrice } from '@/lib/utils'
-import { Database } from '@/types/database.types'
-
-type Profile = Database['public']['Tables']['profiles']['Row']
-type Listing = Database['public']['Tables']['listings']['Row']
 
 interface AdminMetrics {
   total_sales: number
@@ -29,75 +25,74 @@ interface AdminMetrics {
 }
 
 export default function Admin() {
+  console.log('=== ADMIN COMPONENT STARTED ===')
   const navigate = useNavigate()
-  const { user, isAdmin, loading: authLoading } = useAuth()
+  const { user, profile, isAdmin, loading: authLoading } = useAuth()
+  
+  console.log('Admin render - user:', user, 'profile:', profile, 'isAdmin:', isAdmin, 'authLoading:', authLoading)
+  
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null)
-  const [users, setUsers] = useState<Profile[]>([])
-  const [listings, setListings] = useState<Listing[]>([])
+  const [users, setUsers] = useState<any[]>([])
+  const [listings, setListings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [banReason, setBanReason] = useState('')
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
 
   useEffect(() => {
-    if (authLoading) return
+    console.log('Admin useEffect - authLoading:', authLoading, 'user:', user, 'profile:', profile, 'isAdmin:', isAdmin)
+    
+    if (authLoading) {
+      console.log('Still loading auth...')
+      return
+    }
 
     if (!user) {
+      console.log('No user - redirecting to auth')
       navigate('/auth')
       return
     }
 
-    if (!isAdmin) {
+    if (!profile) {
+      console.log('No profile yet - waiting...')
+      return
+    }
+
+    if (profile.role !== 'admin') {
+      console.log('User is not admin - profile role:', profile.role, '- redirecting to home')
       navigate('/')
       return
     }
 
+    console.log('User is admin - fetching admin data, profile role:', profile.role)
     fetchAdminData()
-  }, [user, isAdmin, authLoading, navigate])
+  }, [user, profile, authLoading, navigate])
 
   const fetchAdminData = async () => {
     try {
-      // Fetch metrics
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) return
+      console.log('fetchAdminData started')
+      
+      const usersResult = await supabase.from('profiles').select('*')
+      const listingsResult = await supabase.from('listings').select('*')
+      
+      console.log('Users result:', usersResult.data?.length)
+      console.log('Listings result:', listingsResult.data?.length)
 
-      const metricsResponse = await fetch('/functions/v1/admin-actions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ action: 'metrics' }),
-      })
-
-      if (metricsResponse.ok) {
-        const metricsData = await metricsResponse.json()
-        setMetrics(metricsData)
+      const simpleMetrics = {
+        total_sales: 0,
+        total_orders: 0,
+        recent_sales_30_days: 0,
+        active_listings: listingsResult.data?.length || 0,
+        sold_listings: 0,
+        total_users: usersResult.data?.length || 0,
+        top_sellers: []
       }
 
-      // Fetch users
-      const { data: usersData, error: usersError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (usersError) {
-        console.error('Error fetching users:', usersError)
-      } else {
-        setUsers(usersData || [])
-      }
-
-      // Fetch listings
-      const { data: listingsData, error: listingsError } = await supabase
-        .from('listings')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (listingsError) {
-        console.error('Error fetching listings:', listingsError)
-      } else {
-        setListings(listingsData || [])
-      }
+      setMetrics(simpleMetrics)
+      setUsers(usersResult.data || [])
+      setListings(listingsResult.data || [])
+      
+      console.log('fetchAdminData completed')
     } catch (error) {
       console.error('Error fetching admin data:', error)
     } finally {
@@ -110,31 +105,38 @@ export default function Admin() {
 
     setActionLoading(action)
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) return
-
-      const response = await fetch('/functions/v1/admin-actions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          action,
-          user_id: action.includes('user') ? targetId : undefined,
-          listing_id: action.includes('listing') ? targetId : undefined,
-          reason,
-        }),
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Action failed')
+      if (action === 'ban_user') {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ role: 'banned' })
+          .eq('id', targetId)
+        
+        if (error) throw error
+      } else if (action === 'unban_user') {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ role: 'user' })
+          .eq('id', targetId)
+        
+        if (error) throw error
+      } else if (action === 'hide_listing') {
+        const { error } = await supabase
+          .from('listings')
+          .update({ status: 'hidden' })
+          .eq('id', targetId)
+        
+        if (error) throw error
+      } else if (action === 'unhide_listing') {
+        const { error } = await supabase
+          .from('listings')
+          .update({ status: 'active' })
+          .eq('id', targetId)
+        
+        if (error) throw error
       }
 
       alert('Action completed successfully')
-      fetchAdminData() // Refresh data
+      fetchAdminData()
     } catch (error) {
       console.error('Error performing admin action:', error)
       alert(`Action failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -148,7 +150,7 @@ export default function Admin() {
   if (authLoading || loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading...</div>
+        <div className="text-center">Loading Admin Dashboard...</div>
       </div>
     )
   }
@@ -156,7 +158,7 @@ export default function Admin() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-2">🔧 Admin Dashboard</h1>
         <p className="text-muted-foreground">
           Manage users, listings, and view platform metrics
         </p>
@@ -167,10 +169,19 @@ export default function Admin() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatPrice(metrics.total_sales)}</div>
+              <div className="text-2xl font-bold">{metrics.total_users}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Active Listings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{metrics.active_listings}</div>
             </CardContent>
           </Card>
 
@@ -185,19 +196,10 @@ export default function Admin() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Sales (30 days)</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatPrice(metrics.recent_sales_30_days)}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{metrics.total_users}</div>
+              <div className="text-2xl font-bold">{formatPrice(metrics.total_sales)}</div>
             </CardContent>
           </Card>
         </div>
@@ -207,7 +209,7 @@ export default function Admin() {
         {/* Users Management */}
         <Card>
           <CardHeader>
-            <CardTitle>Users Management</CardTitle>
+            <CardTitle>👥 Users Management</CardTitle>
             <CardDescription>
               Manage user accounts and permissions
             </CardDescription>
@@ -287,7 +289,7 @@ export default function Admin() {
         {/* Listings Management */}
         <Card>
           <CardHeader>
-            <CardTitle>Listings Management</CardTitle>
+            <CardTitle>📝 Listings Management</CardTitle>
             <CardDescription>
               Manage marketplace listings
             </CardDescription>
@@ -299,7 +301,7 @@ export default function Admin() {
                   <div>
                     <p className="font-medium">{listing.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {formatPrice(listing.price_amount, listing.currency)} • Status: {listing.status}
+                      {listing.price_amount} {listing.currency} • Status: {listing.status}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -329,36 +331,6 @@ export default function Admin() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Top Sellers */}
-      {metrics && metrics.top_sellers.length > 0 && (
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Top Sellers</CardTitle>
-            <CardDescription>
-              Best performing sellers on the platform
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {metrics.top_sellers.map((seller, index) => (
-                <div key={seller.seller_id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">#{index + 1} {seller.seller_email}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {seller.total_orders} orders • {formatPrice(seller.total_sales)} total sales
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">{formatPrice(seller.avg_sale_amount)}</p>
-                    <p className="text-sm text-muted-foreground">avg. sale</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   )
 }

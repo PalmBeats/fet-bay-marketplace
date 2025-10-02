@@ -1,0 +1,27 @@
+SOLUTION: Make alpalmcino@hotmail.com Admin
+
+STEP 1: Go to Supabase Dashboard SQL Editor
+STEP 2: Run this SQL:
+
+UPDATE profiles 
+SET role = 'admin' 
+WHERE email = 'alpalmcino@hotmail.com';
+
+-- Verify it worked:
+SELECT id, email, role, created_at 
+FROM profiles 
+WHERE email = 'alpalmcino@hotmail.com';
+
+STEP 3: Hard refresh browser (Cmd+Shift+R on Mac)
+
+STEP 4: Test admin access:
+http://localhost:5175/fet-bay-marketplace/admin
+
+STEP 5: Admin should show:
+- User Management (ban/unban users)
+- Listings Management (hide/unhide listings)
+- Platform Metrics
+
+If still not working, use MakeAdmin page:
+http://localhost:5175/fet-bay-marketplace/make-admin
+Admin Code: MAKE-ME-ADMIN-2024

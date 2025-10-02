@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export default function MakeAdmin() {
+  console.log('=== MAKEADMIN COMPONENT STARTED ===')
+  
   const navigate = useNavigate()
   const { user, isAdmin } = useAuth()
   const [adminCode, setAdminCode] = useState('')

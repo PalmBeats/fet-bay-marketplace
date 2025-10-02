@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 export default function Navbar() {
   const navigate = useNavigate()
   const { user, profile, isBanned, isAdmin, signOut } = useAuth()
+  
+  console.log('Navbar - user:', user, 'profile:', profile, 'isAdmin:', isAdmin)
 
   const handleSignOut = async () => {
     await signOut()
@@ -42,7 +44,7 @@ export default function Navbar() {
                 </Button>
                 {isAdmin && (
                   <Button variant="ghost" size="lg" asChild>
-                    <Link to="/admin">Admin</Link>
+                    <Link to="/fet-bay-marketplace/admin">Admin</Link>
                   </Button>
                 )}
                 <Button variant="ghost" size="lg" onClick={handleSignOut}>Sign Out</Button>
