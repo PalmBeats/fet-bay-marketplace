@@ -61,6 +61,13 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/dist
+          
+      - name: Debug: Show dist contents
+        run: |
+          echo "=== DIST CONTENTS ==="
+          ls -la apps/web/dist/
+          echo "=== ASSETS CONTENTS ==="
+          ls -la apps/web/dist/assets/ || echo "No assets folder found"
 
   # Deployment job
   deploy:
