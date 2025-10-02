@@ -4,7 +4,6 @@ import path from 'path'
 
 // Production config for GitHub Pages
 export default defineConfig({
-  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -15,6 +14,7 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
   },
+  plugins: [react()],
   define: {
     // Add CSP-friendly configuration
     __DEV__: false,
