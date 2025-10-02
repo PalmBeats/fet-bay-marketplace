@@ -43,9 +43,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-rose-950 to-black text-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-rose-950 to-black text-white overflow-x-hidden w-full">
         <Navbar />
-        <main className="bg-gradient-to-br from-gray-900 via-rose-950 to-black">
+        <main className="bg-gradient-to-br from-gray-900 via-rose-950 to-black overflow-x-hidden w-full">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
