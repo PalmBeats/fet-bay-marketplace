@@ -268,7 +268,10 @@ export default function Checkout() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    console.log('Checkout useEffect - user:', user?.id, 'user exists:', !!user)
+    
     if (!user) {
+      console.log('No user found in Checkout - redirecting to auth')
       navigate('/auth')
       return
     }
@@ -280,6 +283,7 @@ export default function Checkout() {
     }
 
     if (id) {
+      console.log('User exists, fetching listing for id:', id)
       fetchListing()
     }
   }, [id, user, isBanned, navigate])

@@ -14,6 +14,7 @@ export function useAuth() {
   useEffect(() => {
     if (isDevMode) {
       // Development mode - simulate a logged-in user
+      console.log('useAuth: Development mode - setting mock user:', mockUser.id)
       setUser(mockUser as User)
       setProfile(mockProfiles[0])
       setLoading(false)

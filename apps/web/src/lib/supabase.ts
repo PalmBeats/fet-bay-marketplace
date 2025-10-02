@@ -14,14 +14,7 @@ if (!DEV_MODE && (!supabaseUrl || !supabaseAnonKey)) {
 export const supabase = DEV_MODE 
   ? ({
       ...createClient('https://fake.supabase.co', 'fake-key'),
-      auth: {
-        ...createClient('https://fake.supabase.co', 'fake-key').auth,
-        getSession: mockAuth.getSession,
-        signInWithPassword: mockAuth.signInWithPassword,
-        signUp: mockAuth.signUp,
-        signOut: mockAuth.signOut,
-        onAuthStateChange: mockAuth.onAuthStateChange,
-      }
+      auth: mockAuth
     } as any)
   : createClient(supabaseUrl!, supabaseAnonKey!)
 
