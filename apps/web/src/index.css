@@ -165,6 +165,15 @@
       0 0 0 3px hsl(var(--crimson-glow) / 0.2),
       0 0 20px hsl(var(--neon-glow) / 0.3);
   }
+  
+  .logo-glow {
+    filter: drop-shadow(0 0 8px hsl(var(--crimson-glow) / 0.6));
+    transition: filter 0.3s ease;
+  }
+  
+  .logo-glow:hover {
+    filter: drop-shadow(0 0 16px hsl(var(--neon-glow) / 0.8));
+  }
 }
 
 /* Custom scrollbar for sensual feel */

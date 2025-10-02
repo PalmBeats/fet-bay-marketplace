@@ -16,9 +16,16 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
           <div className="flex items-center space-x-4">
-            <Link to="/" className="flex items-center gap-3 hover:text-white sensual-hover">
-              <img className="h-10 sensual-glow" src="/logo.svg" alt="logo" />
-              <span className="text-3xl font-bold font-[Playfair Display] sensual-glow-text">Fet-Bay</span>
+            <Link to="/" className="flex items-center gap-4 hover:text-white sensual-hover">
+              <div className="relative">
+                <img 
+                  className="h-14 w-auto logo-glow transition-transform duration-300 hover:scale-110" 
+                  src="/logo.png" 
+                  alt="Fet-Bay Logo" 
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(var(--crimson-glow))] to-[hsl(var(--neon-glow))] opacity-0 hover:opacity-20 blur-md transition-all duration-500 -z-10" />
+              </div>
+              <span className="text-4xl font-bold font-[Playfair Display] sensual-glow-text">Fet-Bay</span>
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-6">
