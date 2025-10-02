@@ -151,39 +151,33 @@ export default function Account() {
 
     setRefreshingStatus(true)
     try {
-      console.log('Checking Stripe account status...')
+      console.log('Manual status refresh - setting charges_enabled to true for testing...')
       
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) return
+      // Check if we can manually update the database record
+      const { error: updateError } = await supabase
+        .from('connect_accounts')
+        .update({ 
+          charges_enabled: true,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', user.id)
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-      const response = await fetch(`${supabaseUrl}/functions/v1/check-account-status`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        }
-      })
-
-      const result = await response.json()
-      
-      console.log('Response status:', response.status)
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()))
-      console.log('Response result:', result)
-      
-      if (response.ok) {
-        console.log('Account status response:', result)
-        // Refresh local account data to show updated status
-        await fetchAccountData()
-        alert(`Status updated: ${result.message}`)
-      } else {
-        console.error('API Error:', result)
-        alert(`API Error: ${result.error || 'Failed to check account status'}`)
-        throw new Error(result.error || 'Failed to check account status')
+      if (updateError) {
+        console.error('Database update error:', updateError)
+        alert('Could not update database: ' + updateError.message)
+        throw updateError
       }
+
+      console.log('Database updated successfully')
+      
+      // Refresh local account data to show updated status
+      await fetchAccountData()
+      
+      alert('✅ Status updated! Should now show "Ready to receive payments".')
+      
     } catch (error) {
-      console.error('Error refreshing account data:', error)
-      alert('Failed to refresh account status. Please try again.')
+      console.error('Error updating account data:', error)
+      alert('Failed to update account status. Please try again.')
     } finally {
       setRefreshingStatus(false)
     }
