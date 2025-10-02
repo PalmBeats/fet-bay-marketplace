@@ -14,6 +14,8 @@ import Navbar from '@/components/Navbar'
 
 function App() {
   const { loading } = useAuth()
+  
+  console.log('App render - loading:', loading)
 
   return (
     <Router>
@@ -31,6 +33,15 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/__/newadmin" element={<NewAdmin />} />
             <Route path="/make-admin" element={<MakeAdmin />} />
+            <Route path="*" element={
+              <div className="container mx-auto px-4 py-8 text-center">
+                <h1 className="text-2xl font-bold mb-4">404 - Route Not Found</h1>
+                <p className="mb-4">Current URL: {window.location.pathname}</p>
+                <div className="mb-4">
+                  <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Homepage</a>
+                </div>
+              </div>
+            } />
           </Routes>
         </main>
         <Toaster />

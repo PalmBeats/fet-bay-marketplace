@@ -5,7 +5,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // Development mode - only use mock data when no real Supabase connection
-const DEV_MODE = import.meta.env.DEV && (!supabaseUrl || !supabaseAnonKey)
+const DEV_MODE = import.meta.env.DEV && (!supabaseUrl || !supabaseAnonKey) && import.meta.env.VITE_INDEV_MODE !== 'FALSE'
 
 if (!DEV_MODE && (!supabaseUrl || !supabaseAnonKey)) {
   throw new Error('Missing Supabase environment variables')

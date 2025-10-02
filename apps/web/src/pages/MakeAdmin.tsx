@@ -19,14 +19,24 @@ export default function MakeAdmin() {
 
   // Redirect if already admin
   if (isAdmin) {
+    console.log('User is already admin - redirecting to /admin')
     navigate('/admin')
-    return null
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-md">
+        <div className="text-center">Redirecting to admin dashboard...</div>
+      </div>
+    )
   }
 
   // Redirect if not authenticated
   if (!user) {
+    console.log('No user - redirecting to /auth')
     navigate('/auth')
-    return null
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-md">
+        <div className="text-center">Please sign in first...</div>
+      </div>
+    )
   }
 
   const handleMakeAdmin = async (e: React.FormEvent) => {
