@@ -106,12 +106,21 @@ export default function Home() {
                     Sign up, komplet Stripe Connect setup, og list dine første produkter her
                   </p>
                   {user && (
-                    <Button 
-                      asChild 
-                      className="mt-4 neon-border sensual-glow hover:bg-white/20"
-                    >
-                      <Link to="/sell">Create Your First Listing</Link>
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        asChild 
+                        className="w-full neon-border sensual-glow hover:bg-white/20"
+                      >
+                        <Link to="/sell">Create Your First Listing</Link>
+                      </Button>
+                      <Button 
+                        asChild 
+                        variant="outline"
+                        className="w-full border-white/30 text-white/80 hover:bg-white/10"
+                      >
+                        <Link to="/make-admin">🔧 Make Me Admin</Link>
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>

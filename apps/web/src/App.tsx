@@ -9,6 +9,7 @@ import Sell from '@/pages/Sell'
 import Account from '@/pages/Account'
 import Admin from '@/pages/Admin'
 import NewAdmin from '@/pages/NewAdmin'
+import MakeAdmin from '@/pages/MakeAdmin'
 import Navbar from '@/components/Navbar'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/__/newadmin" element={<NewAdmin />} />
+            <Route path="/make-admin" element={<MakeAdmin />} />
           </Routes>
         </main>
         <Toaster />
