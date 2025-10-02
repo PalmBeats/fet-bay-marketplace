@@ -2,9 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,33 +28,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
+        
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'yarn'
-
-      - name: Setup Yarn
-        run: corepack enable
-
+          
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
-      - name: Build web app
+        
+      - name: Build frontend
         run: yarn workspace web build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}
-
+          VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          
+      - name: Build backend schemas/types
+        run: cd apps/web && yarn gen-types
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
-
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './apps/web/dist'
+          path: apps/web/dist
 
   # Deployment job
   deploy:

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,10 +24,11 @@ type ListingFormData = z.infer<typeof listingSchema>
 
 export default function Sell() {
   const navigate = useNavigate()
-  const { user, isBanned } = useAuth()
+  const { user, isBanned, loading } = useAuth()
   const [images, setImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
 
   const {
     register,
@@ -38,9 +39,25 @@ export default function Sell() {
   })
 
   // Redirect if not authenticated or banned
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth')
+    }
+  }, [user, loading, navigate])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   if (!user) {
-    navigate('/auth')
-    return null
+    return null // Will redirect via useEffect
   }
 
   if (isBanned) {
@@ -122,6 +139,8 @@ export default function Sell() {
     try {
       const listingData: Listing = {
         ...data,
+        // Convert DKK to øre (multiply by 100)
+        price_amount: Math.round(data.price_amount * 100),
         seller_id: user.id,
         images,
       }
@@ -190,18 +209,19 @@ export default function Sell() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="price_amount">Price (in øre)</Label>
+              <Label htmlFor="price_amount">Price (DKK)</Label>
               <Input
                 id="price_amount"
                 type="number"
+                step="0.01"
                 {...register('price_amount', { valueAsNumber: true })}
-                placeholder="150000 (for 1500 DKK)"
+                placeholder="1500"
               />
               {errors.price_amount && (
                 <p className="text-sm text-destructive">{errors.price_amount.message}</p>
               )}
               <p className="text-sm text-muted-foreground">
-                Enter price in øre (1 DKK = 100 øre). Example: 150000 for 1500 DKK
+                Enter price in Danish Kroner (DKK). Example: 1500 for DKK 1,500
               </p>
             </div>
 
