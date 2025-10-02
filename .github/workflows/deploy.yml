@@ -44,6 +44,7 @@ jobs:
         run: |
           ls -la apps/web/
           cd apps/web && yarn build --config=vite.config.prod.ts
+          cp dist/index.html dist/404.html
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ynfvzbefyfetseqkktqt.supabase.co' }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluZnZ6YmVmeWZldHNlcWtrdHF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzMjcxOTIsImV4cCI6MjA3NDkwMzE5Mn0.CzWX_U7fwVoP4g8qFo4h8lVrA5mUPJOjeZZRQxJaRMs' }}
