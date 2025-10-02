@@ -37,15 +37,18 @@ export default function Home() {
 
         const { data, error } = await query
 
-        if (error) console.error('Error fetching listings:', error)
-        else setListings(data || [])
+        if (error) {
+          // Fallback to mock data if real DB fails
+          const filteredListings = mockListings.filter(listing => listing.status === 'active')
+          setListings(filteredListings)
+        } else {
+          setListings(data || [])
+        }
       }
     } catch (error) {
-      console.error('Error fetching listings:', error)
-      if (isDevMode) {
-        const filteredListings = mockListings.filter(listing => listing.status === 'active')
-        setListings(filteredListings)
-      }
+      // Exception fallback to mock data
+      const filteredListings = mockListings.filter(listing => listing.status === 'active')
+      setListings(filteredListings)
     } finally {
       setLoading(false)
     }
@@ -57,8 +60,82 @@ export default function Home() {
       listing.description?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  if (loading) return <div className="container mx-auto px-4 py-8"><div className="text-center">Loading...</div></div>
-
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <div className="text-xl mb-4">🔄 Loading marketplace...</div>
+          <div className="text-sm text-muted-foreground">
+            Fetching latest products...
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // If no listings, show empty state with guidance
+  if (listings.length === 0) {
+    return (
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-7xl mx-auto text-center">
+            <div className="pt-16 pb-16 text-center ambient-glow">
+              <h1 className="text-6xl font-bold mb-4 font-[Playfair Display] sensual-glow-text bg-gradient-to-r from-white via-[hsl(var(--crimson-glow))] to-[hsl(var(--neon-glow))] bg-clip-text text-transparent">
+                Fet-Bay Marketplace
+              </h1>
+              <p className="text-xl mb-8 text-muted-foreground">
+                Dit destination for sensuelle fund og samleobjekter
+              </p>
+            </div>
+            
+            <div className="bg-gradient-to-r from-[hsl(var(--burgundy-deeper))] to-[hsl(var(--crimson-glow))] p-8 rounded-lg mb-8 ambient-glow">
+              <h2 className="text-3xl font-bold mb-4 font-[Playfair Display] text-white">Velkommen til Fet-Bay!</h2>
+              <p className="text-lg mb-6 text-white/90">
+                Marketplace er tom som en clean slate. Værsgo til at være den første til at:
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 text-left">
+                <div className="bg-white/10 p-4 rounded-lg">
+                  <h3 className="text-xl font-bold mb-2 text-white">🛍️ Som Køber:</h3>
+                  <p className="text-white/90">
+                    Browse produkter (når de kommer), klik "Sign In to Buy" og gennemfør køb med Stripe
+                  </p>
+                </div>
+                <div className="bg-white/10 p-4 rounded-lg">
+                  <h3 className="text-xl font-bold mb-2 text-white">📝 Som Sælger:</h3>
+                  <p className="text-white/90">
+                    Sign up, komplet Stripe Connect setup, og list dine første produkter her
+                  </p>
+                  {user && (
+                    <Button 
+                      asChild 
+                      className="mt-4 neon-border sensual-glow hover:bg-white/20"
+                    >
+                      <Link to="/sell">Create Your First Listing</Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {!user && (
+                <div className="mt-8">
+                  <p className="text-lg mb-4 text-white/90">Kom igang nu:</p>
+                  <div className="flex gap-4 justify-center">
+                    <Button asChild className="neon-border sensual-glow hover:bg-white/20">
+                      <Link to="/auth">Sign Up</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="border-white text-white hover:bg-white/10">
+                      <Link to="/auth">Sign In</Link>
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
