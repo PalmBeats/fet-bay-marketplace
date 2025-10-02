@@ -167,12 +167,18 @@ export default function Account() {
 
       const result = await response.json()
       
+      console.log('Response status:', response.status)
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+      console.log('Response result:', result)
+      
       if (response.ok) {
         console.log('Account status response:', result)
         // Refresh local account data to show updated status
         await fetchAccountData()
         alert(`Status updated: ${result.message}`)
       } else {
+        console.error('API Error:', result)
+        alert(`API Error: ${result.error || 'Failed to check account status'}`)
         throw new Error(result.error || 'Failed to check account status')
       }
     } catch (error) {
