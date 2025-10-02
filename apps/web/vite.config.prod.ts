@@ -21,7 +21,8 @@ export default defineConfig({
   },
   server: {
     headers: {
-      'Content-Security-Policy': "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;",
+      // Simplified CSP for GitHub Pages compatibility
+      'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'",
     },
   },
 })

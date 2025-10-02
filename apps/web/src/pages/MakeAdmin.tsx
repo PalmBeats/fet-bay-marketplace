@@ -15,6 +15,8 @@ export default function MakeAdmin() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
+  console.log('MakeAdmin render - user:', user, 'isAdmin:', isAdmin)
+
   // Redirect if already admin
   if (isAdmin) {
     navigate('/admin')
@@ -85,6 +87,9 @@ export default function MakeAdmin() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-md">
+      <div className="mb-4 text-center text-sm text-muted-foreground bg-yellow-100 dark:bg-yellow-900/20 p-2 rounded">
+        🔧 MakeAdmin Page Loaded - Testing debugging
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>🔧 Make Me Admin</CardTitle>
