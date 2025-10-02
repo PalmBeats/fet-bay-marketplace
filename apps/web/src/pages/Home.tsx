@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase, isDevMode } from '@/lib/supabase'
 import { mockListings } from '@/lib/mockData'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,10 +7,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { formatPrice } from '@/lib/utils'
 import { Database } from '@/types/database.types'
+import { useAuth } from '@/hooks/useAuth'
 
 type Listing = Database['public']['Tables']['listings']['Row']
 
 export default function Home() {
+  const navigate = useNavigate()
+  const { user } = useAuth()
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -121,10 +124,19 @@ export default function Home() {
                       </div>
                       <div className="flex gap-2">
                         <Button 
-                          asChild 
+                          onClick={() => {
+                            console.log('Home Buy Now clicked - user:', user?.id, 'user exists:', !!user)
+                            if (!user) {
+                              console.log('No user - redirecting to auth')
+                              navigate('/auth')
+                              return
+                            }
+                            console.log('Navigating to checkout:', listing.id)
+                            navigate(`/checkout/${listing.id}`)
+                          }}
                           className="flex-1 neon-border hover:bg-[hsl(var(--crimson-glow))] sensual-glow"
                         >
-                          <Link to={`/checkout/${listing.id}`}>Buy Now</Link>
+                          Buy Now
                         </Button>
                         <Button 
                           asChild 

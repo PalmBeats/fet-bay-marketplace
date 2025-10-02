@@ -59,7 +59,10 @@ export default function ListingDetail() {
   }
 
   const handleBuy = () => {
+    console.log('handleBuy called - user:', user?.id, 'user exists:', !!user)
+    
     if (!user) {
+      console.log('No user found in handleBuy - redirecting to auth')
       navigate('/auth')
       return
     }
@@ -67,6 +70,7 @@ export default function ListingDetail() {
       alert('Your account is banned. You cannot make purchases.')
       return
     }
+    console.log('Navigating to checkout for listing:', id)
     navigate(`/checkout/${id}`)
   }
 
