@@ -57,17 +57,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: apps/web/dist
-          
       - name: Debug: Show dist contents
         run: |
           echo "=== DIST CONTENTS ==="
           ls -la apps/web/dist/
           echo "=== ASSETS CONTENTS ==="
           ls -la apps/web/dist/assets/ || echo "No assets folder found"
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
 
   # Deployment job
   deploy:
