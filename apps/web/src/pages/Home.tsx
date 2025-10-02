@@ -136,7 +136,7 @@ export default function Home() {
                           }}
                           className="flex-1 neon-border hover:bg-[hsl(var(--crimson-glow))] sensual-glow"
                         >
-                          Buy Now
+                          {user ? 'Buy Now' : 'Sign In to Buy'}
                         </Button>
                         <Button 
                           asChild 

@@ -181,7 +181,10 @@ export default function ListingDetail() {
                   size="lg"
                   disabled={listing.status !== 'active'}
                 >
-                  {listing.status === 'active' ? 'Buy Now - Complete Purchase' : 'Sold Out'}
+                  {listing.status === 'active' 
+                    ? (user ? 'Buy Now - Complete Purchase' : 'Sign In to Purchase')
+                    : 'Sold Out'
+                  }
                 </Button>
                 <div className="text-center text-sm text-muted-foreground">
                   Secure checkout powered by Stripe
