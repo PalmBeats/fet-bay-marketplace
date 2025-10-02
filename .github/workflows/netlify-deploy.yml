@@ -1,0 +1,37 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+        
+      - name: Build frontend
+        run: cd apps/web && yarn build --config vite.config.prod.ts
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ynfvzbefyfetseqkktqt.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluZnZ6YmVmeWZldHNlcWtrdHF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzMjcxOTIsImV4cCI6MjA3NDkwMzE5Mn0.CzWX_U7fwVoP4g8qFo4h8lVrA5mUPJOjeZZRQxJaRMs' }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51SDXOZAqP9MGvDebCnOp4yIuanT5L1WiFsMaKgzB1a01hsUunolgeg3CMx1eTaVl0HBJqKneT0p0ljFRw5RFJEBp00FEineLpp' }}
+          VITE_INDEV_MODE: 'FALSE'
+          
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --prod --dir=apps/web/dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
