@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// https://vitejs.dev/config/
+// Production config for GitHub Pages
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -11,4 +11,8 @@ export default defineConfig({
     },
   },
   base: '/fet-bay-marketplace/', // GitHub Pages subdirectory
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+  },
 })
