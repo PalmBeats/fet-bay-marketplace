@@ -43,9 +43,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-rose-950 to-black text-white">
         <Navbar />
-        <main>
+        <main className="bg-gradient-to-br from-gray-900 via-rose-950 to-black">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
