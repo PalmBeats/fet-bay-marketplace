@@ -15,4 +15,13 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
   },
+  define: {
+    // Add CSP-friendly configuration
+    __DEV__: false,
+  },
+  server: {
+    headers: {
+      'Content-Security-Policy': "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;",
+    },
+  },
 })
