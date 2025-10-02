@@ -73,7 +73,7 @@ function CheckoutForm({ listing }: { listing: Listing }) {
 
       if (!response.ok) {
         if (result.needs_onboarding) {
-          alert('Seller needs to complete payment setup. Please try again later.')
+          alert(`⚠️ Seller Payment Setup Required\n\nThis seller hasn't completed their payment account setup yet.\n\nPlease contact the seller to complete Stripe onboarding before purchasing.\n\nYou'll be redirected to the marketplace.`)
           navigate('/')
           return
         }
