@@ -166,7 +166,12 @@ export const mockAuth = {
   
   async getSession() {
     return {
-      data: { session: null },
+      data: { 
+        session: {
+          user: mockUser,
+          access_token: 'mock-token'
+        }
+      },
       error: null
     }
   },

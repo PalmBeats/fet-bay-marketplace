@@ -50,6 +50,8 @@ function CheckoutForm({ listing }: { listing: Listing }) {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
+        console.error('No session available in createPaymentIntent')
+        alert('Session expired. Please log in again.')
         navigate('/auth')
         return
       }

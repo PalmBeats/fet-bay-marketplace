@@ -170,18 +170,23 @@ export default function ListingDetail() {
                 </Button>
               </div>
             ) : (
-              <Button 
-                onClick={handleBuy} 
-                className="w-full" 
-                size="lg"
-                disabled={listing.status !== 'active'}
-              >
-                {listing.status === 'active' ? 'Buy Now' : 'Sold'}
-              </Button>
+              <>
+                <Button 
+                  onClick={handleBuy} 
+                  className="w-full py-6 text-lg font-[Playfair Display] neon-border sensual-glow hover:bg-[hsl(var(--crimson-glow))]" 
+                  size="lg"
+                  disabled={listing.status !== 'active'}
+                >
+                  {listing.status === 'active' ? 'Buy Now - Complete Purchase' : 'Sold Out'}
+                </Button>
+                <div className="text-center text-sm text-muted-foreground">
+                  Secure checkout powered by Stripe
+                </div>
+              </>
             )}
             
             <Button asChild variant="outline" className="w-full">
-              <Link to="/">Back to Listings</Link>
+              <Link to="/">Back to Marketplace</Link>
             </Button>
           </div>
         </div>

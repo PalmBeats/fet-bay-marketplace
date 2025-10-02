@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { mockAuth } from './mockData'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -11,16 +12,17 @@ if (!DEV_MODE && (!supabaseUrl || !supabaseAnonKey)) {
 }
 
 export const supabase = DEV_MODE 
-  ? createClient(
-      'https://fake.supabase.co', // Dummy URL 
-      'fake-key',
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        }
+  ? ({
+      ...createClient('https://fake.supabase.co', 'fake-key'),
+      auth: {
+        ...createClient('https://fake.supabase.co', 'fake-key').auth,
+        getSession: mockAuth.getSession,
+        signInWithPassword: mockAuth.signInWithPassword,
+        signUp: mockAuth.signUp,
+        signOut: mockAuth.signOut,
+        onAuthStateChange: mockAuth.onAuthStateChange,
       }
-    )
+    } as any)
   : createClient(supabaseUrl!, supabaseAnonKey!)
 
 // Development mode flag
