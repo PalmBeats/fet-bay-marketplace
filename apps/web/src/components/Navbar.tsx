@@ -50,10 +50,10 @@ export default function Navbar() {
             ) : (
               <>
                 <Button variant="ghost" size="lg" asChild>
-                  <Link to="/auth">Sign In</Link>
+                  <Link to="/auth?mode=signin">Sign In</Link>
                 </Button>
                 <Button size="lg" asChild>
-                  <Link to="/auth">Sign Up</Link>
+                  <Link to="/auth?mode=signup">Sign Up</Link>
                 </Button>
               </>
             )}
