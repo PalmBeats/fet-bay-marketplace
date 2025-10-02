@@ -121,10 +121,10 @@ export default function Home() {
                   <p className="text-lg mb-4 text-white/90">Kom igang nu:</p>
                   <div className="flex gap-4 justify-center">
                     <Button asChild className="neon-border sensual-glow hover:bg-white/20">
-                      <Link to="/auth">Sign Up</Link>
+                      <Link to="/auth?mode=signup">Sign Up</Link>
                     </Button>
                     <Button asChild variant="outline" className="border-white text-white hover:bg-white/10">
-                      <Link to="/auth">Sign In</Link>
+                      <Link to="/auth?mode=signin">Sign In</Link>
                     </Button>
                   </div>
                 </div>
@@ -162,16 +162,6 @@ export default function Home() {
                   <option value="price_amount">Price: Low to High</option>
                 </select>
               </div>
-            </div>
-            <div className="flex justify-center gap-6">
-              <Button size="lg" className="pr-10 pl-10 py-6 text-lg font-[Playfair Display] neon-border sensual-glow">
-                Explore Collection
-              </Button>
-              <Link to="/sell">
-                <Button variant="outline" size="lg" className="pr-10 pl-10 py-6 text-lg font-[Playfair Display] border-[hsl(var(--crimson-glow))] hover:bg-[hsl(var(--crimson-glow))] hover:text-white sensory-hover">
-                  Become a Vendor
-                </Button>
-              </Link>
             </div>
           </div>
           {filteredListings.length === 0 ? (

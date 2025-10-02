@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,13 +7,24 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true)
+  const [searchParams] = useSearchParams()
+  const mode = searchParams.get('mode')
+  const [isLogin, setIsLogin] = useState(mode === 'signin' ? true : mode === 'signup' ? false : true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const { signIn, signUp } = useAuth()
+
+  // Update mode when URL parameter changes
+  useEffect(() => {
+    if (mode === 'signin') {
+      setIsLogin(true)
+    } else if (mode === 'signup') {
+      setIsLogin(false)
+    }
+  }, [mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
