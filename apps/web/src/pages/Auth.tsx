@@ -81,17 +81,6 @@ export default function Auth() {
               {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
             </Button>
           </form>
-          {isLogin && (
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-              <p className="text-sm text-blue-800 font-medium mb-2">🔧 Development Mode Test Accounts:</p>
-              <div className="text-xs text-blue-700 space-y-1">
-                <div>• admin@test.com / admin123</div>
-                <div>• admin@test.com / password123</div>
-                <div>• seller1@test.com / seller123</div>
-                <div>• buyer@test.com / buyer123</div>
-              </div>
-            </div>
-          )}
           <div className="mt-4 text-center">
             <Button
               variant="link"
