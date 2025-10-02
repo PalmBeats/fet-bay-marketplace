@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { useEffect } from 'react'
 import { Toaster } from '@/components/ui/toaster'
 import { useAuth } from '@/hooks/useAuth'
 import Home from '@/pages/Home'
@@ -14,21 +13,6 @@ import Navbar from '@/components/Navbar'
 
 function App() {
   const { loading } = useAuth()
-  
-  // Handle GitHub Pages routing
-  useEffect(() => {
-    if (import.meta.env.VITE_SITE_URL?.includes('github.io')) {
-      const path = location.pathname
-      if (path.length > 1) {
-        // Redirect GitHub Pages routes to React Router query format
-        let pathPrefix = '/fet-bay-marketplace/'
-        if (!path.startsWith(pathPrefix)) {
-          let newPath = pathPrefix + '?/' + path.substring(1).replace(/&/g, '~and~').replace(/\?/g, '~q~')
-          location.replace(newPath)
-        }
-      }
-    }
-  }, [])
 
   if (loading) {
     return (
@@ -48,6 +32,7 @@ function App() {
         <main className="bg-gradient-to-br from-gray-900 via-rose-950 to-black overflow-x-hidden w-full">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/fet-bay-marketplace/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/listing/:id" element={<ListingDetail />} />
             <Route path="/checkout/:id" element={<Checkout />} />
