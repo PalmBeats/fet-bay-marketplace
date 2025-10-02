@@ -9,7 +9,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function Auth() {
   const [searchParams] = useSearchParams()
   const mode = searchParams.get('mode')
-  const [isLogin, setIsLogin] = useState(mode === 'signin' ? true : mode === 'signup' ? false : true)
+  
+  // Initialize based on URL mode, defaulting to Sign In if no mode specified
+  const getInitialMode = () => {
+    if (mode === 'signup') return false
+    if (mode === 'signin') return true
+    return true // default to Sign In
+  }
+  
+  const [isLogin, setIsLogin] = useState(getInitialMode())
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -19,12 +27,15 @@ export default function Auth() {
 
   // Update mode when URL parameter changes
   useEffect(() => {
+    console.log('Auth URL mode changed:', mode)
     if (mode === 'signin') {
+      console.log('Setting to Sign In mode')
       setIsLogin(true)
     } else if (mode === 'signup') {
+      console.log('Setting to Sign Up mode')
       setIsLogin(false)
     }
-  }, [mode])
+  }, [mode, setIsLogin])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,18 +61,23 @@ export default function Auth() {
     }
   }
 
+  console.log('Auth render - isLogin:', isLogin, 'mode:', mode)
+  
   return (
-    <div className="container mx-auto px-4 py-8 max-w-md">
+   <div className="container mx-auto px-4 py-8 max-w-md">
       <Card>
-        <CardHeader>
-          <CardTitle>{isLogin ? 'Sign In' : 'Sign Up'}</CardTitle>
-          <CardDescription>
-            {isLogin 
-              ? 'Sign in to your account to start buying and selling'
-              : 'Create a new account to get started'
-            }
-          </CardDescription>
-        </CardHeader>
+         <CardHeader>
+            <CardTitle>{isLogin ? 'Sign In' : 'Sign Up'}</CardTitle>
+            <CardDescription>
+               {isLogin 
+                 ? 'Sign in to your account to start buying and selling'
+                 : 'Create a new account to get started'
+               }
+            </CardDescription>
+            <div className="text-xs text-muted-foreground mt-2">
+              Debug: mode={mode}, isLogin={isLogin.toString()}
+            </div>
+         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">

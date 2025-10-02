@@ -121,10 +121,10 @@ export default function Home() {
                   <p className="text-lg mb-4 text-white/90">Kom igang nu:</p>
                   <div className="flex gap-4 justify-center">
                     <Button asChild className="neon-border sensual-glow hover:bg-white/20">
-                      <Link to="/auth?mode=signup">Sign Up</Link>
+                      <Link to="/auth?mode=signup" onClick={() => console.log('Home Sign Up clicked - navigating to /auth?mode=signup')}>Sign Up</Link>
                     </Button>
                     <Button asChild variant="outline" className="border-white text-white hover:bg-white/10">
-                      <Link to="/auth?mode=signin">Sign In</Link>
+                      <Link to="/auth?mode=signin" onClick={() => console.log('Home Sign In clicked - navigating to /auth?mode=signin')}>Sign In</Link>
                     </Button>
                   </div>
                 </div>
