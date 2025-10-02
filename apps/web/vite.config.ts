@@ -10,5 +10,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/', // For GitHub Pages deployment
+  base: process.env.GITHUB_ACTIONS ? '/fet-bay-marketplace/' : '/', // GitHub Pages subdirectory
 })
