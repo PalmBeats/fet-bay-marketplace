@@ -120,7 +120,7 @@ export default function Account() {
           'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
-          return_url: window.location.origin + '/account'
+          return_url: window.location.origin + '/fet-bay-marketplace/account'
         })
       })
       
