@@ -12,21 +12,21 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="border-b bg-gradient-to-r from-rose-950 to-black border-border">
+    <nav className="border-b gradient-header border-border ambient-glow">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
           <div className="flex items-center space-x-4">
-            <Link to="/" className="flex items-center gap-3 hover:text-white transition-colors">
-              <img className="h-10" src="/logo.svg" alt="logo" />
-              <span className="text-2xl font-bold">Fet-Bay</span>
+            <Link to="/" className="flex items-center gap-3 hover:text-white sensual-hover">
+              <img className="h-10 sensual-glow" src="/logo.svg" alt="logo" />
+              <span className="text-3xl font-bold font-[Playfair Display] sensual-glow-text">Fet-Bay</span>
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-medium hover:text-white py-2 px-2 rounded-md hover:bg-primary/8 transition-all">
+            <Link to="/" className="text-medium hover:text-[hsl(var(--crimson-glow))] py-2 px-3 rounded-md sensual-hover neon-border">
               Browse
             </Link>
             {user && !isBanned && (
-              <Link to="/sell" className="text-medium hover:text-white py-2 px-2 rounded-md hover:bg-primary/8 transition-all">
+              <Link to="/sell" className="text-medium hover:text-[hsl(var(--crimson-glow))] py-2 px-3 rounded-md sensual-hover neon-border">
                 Sell
               </Link>
             )}

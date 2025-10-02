@@ -70,11 +70,11 @@ export default function Home() {
       )}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
-          <div className="pt-16 pb-16 text-center">
-            <h1 className="text-5xl font-bold mb-4 text-gradient-header bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+          <div className="pt-16 pb-16 text-center ambient-glow">
+            <h1 className="text-6xl font-bold mb-4 font-[Playfair Display] sensual-glow-text bg-gradient-to-r from-white via-[hsl(var(--crimson-glow))] to-[hsl(var(--neon-glow))] bg-clip-text text-transparent">
               Fet-Bay Marketplace
             </h1>
-            <p className="text-lg text-muted-foreground mb-8">Find great deals on everything you need</p>
+            <p className="text-xl text-muted-foreground mb-8 font-light">Discover exquisite treasures in an intimate marketplace</p>
             <div className="mx-auto max-w-sm mb-16">
               <div className="flex items-center gap-4">
                 <Input
@@ -93,13 +93,13 @@ export default function Home() {
                 </select>
               </div>
             </div>
-            <div className="flex justify-center gap-4">
-              <Button size="lg" className="pr-8 pl-8 hover:bg-primary/90 transition-all hover:shadow-lg">
-                Browse listings
+            <div className="flex justify-center gap-6">
+              <Button size="lg" className="pr-10 pl-10 py-6 text-lg font-[Playfair Display] neon-border sensual-glow">
+                Explore Collection
               </Button>
               <Link to="/sell">
-                <Button variant="outline" size="lg" className="pr-8 pl-8 hover:bg-primary/8 hover:text-white transition-all hover:shadow-lg">
-                  Start selling
+                <Button variant="outline" size="lg" className="pr-10 pl-10 py-6 text-lg font-[Playfair Display] border-[hsl(var(--crimson-glow))] hover:bg-[hsl(var(--crimson-glow))] hover:text-white sensory-hover">
+                  Become a Vendor
                 </Button>
               </Link>
             </div>
@@ -111,12 +111,13 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredListings.map((listing) => (
-                <Card key={listing.id} className="overflow-hidden">
+                <Card key={listing.id} className="overflow-hidden silky-card sensual-hover ambient-glow">
                   {listing.images.length > 0 && (
-                    <div className="aspect-video bg-muted">
-                      <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover"/>
+                    <div className="aspect-video bg-muted relative overflow-hidden">
+                      <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"/>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(var(--burgundy-deeper))] via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"/>
                     </div>
                   )}
                   <CardHeader>

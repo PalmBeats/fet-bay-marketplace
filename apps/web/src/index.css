@@ -1,52 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 100%;
-    --card: 340 9% 12%;
-    --card-foreground: 0 0% 100%;
-    --popover: 340 9% 12%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 342 88% 27%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 345 42% 20%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 345 42% 20%;
-    --muted-foreground: 0 0% 78%;
-    --accent: 342 88% 27%;
-    --accent-foreground: 0 0% 100%;
+    --background: 340 8% 4%;
+    --foreground: 0 0% 98%;
+    --card: 340 15% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 340 15% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 344 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 340 25% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 340 15% 12%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 344 100% 50%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 345 42% 20%;
-    --input: 345 42% 20%;
-    --ring: 342 88% 40%;
+    --border: 340 25% 12%;
+    --input: 340 25% 12%;
+    --ring: 344 100% 60%;
     --radius: 0.75rem;
+    
+    /* Sensual palette */
+    --crimson-glow: 344 100% 60%;
+    --burgundy-deeper: 340 20% 15%;
+    --rose-silk: 340 30% 25%;
+    --neon-glow: 344 100% 70%;
   }
 
   .dark {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 100%;
-    --card: 340 9% 12%;
-    --card-foreground: 0 0% 100%;
-    --popover: 340 9% 12%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 342 88% 27%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 345 42% 20%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 345 42% 20%;
-    --muted-foreground: 0 0% 78%;
-    --accent: 342 88% 27%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 340 8% 4%;
+    --foreground: 0 0% 98%;
+    --card: 340 15% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 340 15% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 344 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 340 25% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 340 15% 12%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 344 100% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 210 40% 98%;
-    --border: 345 42% 20%;
-    --input: 345 42% 20%;
-    --ring: 342 88% 40%;
+    --border: 340 25% 12%;
+    --input: 340 25% 12%;
+    --ring: 344 100% 60%;
     --radius: 0.75rem;
   }
 }
@@ -55,13 +61,19 @@
   * {
     @apply border-border;
   }
+  
   html {
     font-family: ui-sans-serif, system-ui, -apple-system, 'Inter', BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     scroll-behavior: smooth;
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--burgundy-deeper)) 100%);
   }
+  
   body {
-    @apply bg-background text-foreground font-medium antialiased;
+    @apply text-foreground font-medium antialiased;
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--burgundy-deeper)) 100%);
+    min-height: 100vh;
   }
+  
   code {
     font-family: ui-monospace, 'JetBrains Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   }
@@ -69,9 +81,109 @@
 
 @layer components {
   .gradient-header {
-    background-image: radial-gradient(circle at 90% 10%, hsl(var(--primary)), transparent 50%), linear-gradient(to bottom, hsl(var(--primary) / 0.02), hsl(var(--background)));
+    background: linear-gradient(135deg, 
+      hsl(var(--burgundy-deeper)) 0%, 
+      hsl(var(--primary)) 30%, 
+      transparent 100%);
   }
-  .glow-sm:hover {
-    box-shadow: 0 0 1rem hsl(var(--primary) / 0.6);
+  
+  .sensual-glow {
+    box-shadow: 
+      0 0 20px hsl(var(--crimson-glow) / 0.3),
+      0 0 40px hsl(var(--neon-glow) / 0.2),
+      inset 0 1px 0 hsl(var(--rose-silk) / 0.1);
   }
+  
+  .sensual-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .sensual-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 32px hsl(var(--crimson-glow) / 0.4),
+      0 0 60px hsl(var(--neon-glow) / 0.3);
+  }
+  
+  .sensual-glow-text {
+    text-shadow: 
+      0 0 10px hsl(var(--crimson-glow) / 0.8),
+      0 0 20px hsl(var(--neon-glow) / 0.6);
+  }
+  
+  .silky-card {
+    background: linear-gradient(145deg, 
+      hsl(var(--card)) 0%, 
+      hsl(var(--rose-silk) / 0.1) 50%, 
+      hsl(var(--card)) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--rose-silk) / 0.2);
+  }
+  
+  .neon-border {
+    border: 1px solid hsl(var(--crimson-glow));
+    box-shadow: 
+      0 0 10px hsl(var(--crimson-glow) / 0.5),
+      inset 0 0 10px hsl(var(--crimson-glow) / 0.1);
+  }
+  
+  .ambient-glow {
+    position: relative;
+  }
+  
+  .ambient-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, 
+      hsl(var(--crimson-glow) / 0.1) 0%, 
+      transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: pulse 4s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); }
+  }
+  
+  .sensual-input {
+    background: hsl(var(--input) / 0.5);
+    border: 1px solid hsl(var(--rose-silk) / 0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+  
+  .sensual-input:focus {
+    border-color: hsl(var(--crimson-glow));
+    box-shadow: 
+      0 0 0 3px hsl(var(--crimson-glow) / 0.2),
+      0 0 20px hsl(var(--neon-glow) / 0.3);
+  }
+}
+
+/* Custom scrollbar for sensual feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, 
+    hsl(var(--crimson-glow)) 0%, 
+    hsl(var(--primary)) 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, 
+    hsl(var(--neon-glow)) 0%, 
+    hsl(var(--crimson-glow)) 100%);
 }
