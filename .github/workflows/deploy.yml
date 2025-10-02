@@ -35,11 +35,14 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           
+      - name: Enable Corepack
+        run: corepack enable
+        
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: corepack yarn install --immutable
         
       - name: Build frontend
-        run: yarn workspace web build
+        run: corepack yarn workspace web build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
@@ -47,7 +50,7 @@ jobs:
           VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
           
       - name: Build backend schemas/types
-        run: cd apps/web && yarn gen-types
+        run: cd apps/web && corepack yarn gen-types
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
