@@ -42,7 +42,7 @@ function App() {
   }
 
   return (
-    <Router basename={import.meta.env.VITE_SITE_URL?.includes('github.io') ? '/fet-bay-marketplace' : ''}>
+    <Router>
       <div className="min-h-screen bg-background">
         <Navbar />
         <main>

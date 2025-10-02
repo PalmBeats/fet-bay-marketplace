@@ -10,7 +10,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/fet-bay-marketplace/', // GitHub Pages subdirectory
+  base: '/', // Try root first, GitHub Pages auto redirects
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
