@@ -36,15 +36,20 @@ jobs:
           cache: 'yarn'
           
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        
+        run: |
+          yarn --version
+          yarn install --frozen-lockfile
+          
       - name: Build frontend
-        run: yarn workspace web build
+        run: |
+          ls -la apps/web/
+          yarn workspace web build
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ynfvzbefyfetseqkktqt.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluZnZ6YmVmeWZldHNlcWtrdHF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzMjcxOTIsImV4cCI6MjA3NDkwMzE5Mn0.CzWX_U7fwVoP4g8qFo4h8lVrA5mUPJOjeZZRQxJaRMs' }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51SDXOZAqP9MGvDebCnOp4yIuanT5L1WiFsMaKgzB1a01hsUunolgeg3CMx1eTaVl0HBJqKneT0p0ljFRw5RFJEBp00FEineLpp' }}
           VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          VITE_INDEV_MODE: 'FALSE'
           
       - name: Build backend schemas/types
         run: cd apps/web && yarn gen-types
