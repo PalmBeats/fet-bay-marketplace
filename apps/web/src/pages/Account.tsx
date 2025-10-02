@@ -22,6 +22,7 @@ export default function Account() {
   const [connectAccount, setConnectAccount] = useState<ConnectAccount | null>(null)
   const [loading, setLoading] = useState(true)
   const [creatingConnectLink, setCreatingConnectLink] = useState(false)
+  const [refreshingStatus, setRefreshingStatus] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -145,6 +146,24 @@ export default function Account() {
     }
   }
 
+  const handleRefreshStatus = async () => {
+    if (!user || !connectAccount) return
+
+    setRefreshingStatus(true)
+    try {
+      console.log('Refreshing account data from database...')
+      
+      // Force refresh account data from database
+      await fetchAccountData()
+      alert('Account status refreshed! Check your payment setup status.')
+    } catch (error) {
+      console.error('Error refreshing account data:', error)
+      alert('Failed to refresh account status. Please try again.')
+    } finally {
+      setRefreshingStatus(false)
+    }
+  }
+
   const handleDeleteListing = async (listingId: string) => {
     if (!user) return
 
@@ -225,9 +244,20 @@ export default function Account() {
                   </span>
                 </div>
                 {!connectAccount.charges_enabled && (
-                  <Button onClick={handleCreateConnectLink} disabled={creatingConnectLink}>
-                    {creatingConnectLink ? 'Loading...' : 'Complete Setup'}
-                  </Button>
+                  <div className="space-y-2">
+                    <Button onClick={handleCreateConnectLink} disabled={creatingConnectLink}>
+                      {creatingConnectLink ? 'Loading...' : 'Complete Setup'}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleRefreshStatus} 
+                      disabled={refreshingStatus}
+                      className="text-xs"
+                    >
+                      {refreshingStatus ? 'Checking...' : 'Refresh Status'}
+                    </Button>
+                  </div>
                 )}
               </div>
             ) : (
