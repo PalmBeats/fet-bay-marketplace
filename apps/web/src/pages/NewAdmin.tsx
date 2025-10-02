@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -38,7 +39,7 @@ export default function NewAdmin() {
         return
       }
 
-      const response = await fetch('/functions/v1/admin-actions', {
+      const response = await fetch(`${window.location.origin}/fet-bay-marketplace/functions/v1/admin-actions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
