@@ -20,7 +20,7 @@ export default function Navbar() {
               <div className="relative">
                 <img 
                   className="h-14 w-auto logo-glow transition-transform duration-300 hover:scale-110" 
-                  src="/logo.png" 
+                  src="/logo.png?v=2" 
                   alt="Fet-Bay Logo" 
                 />
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(var(--crimson-glow))] to-[hsl(var(--neon-glow))] opacity-0 hover:opacity-20 blur-md transition-all duration-500 -z-10" />
