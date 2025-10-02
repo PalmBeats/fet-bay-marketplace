@@ -41,3 +41,4 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_51SDXOZAqP9MGvDebCnOp4yIuanT5L1WiFsMaKgzB1a0
 ✅ **Payments:** Stripe Connect with 10% platform fee
 ✅ **UI:** DKK pricing, responsive design
 ✅ **Deployment:** GitHub Pages with automatic CI/CD
+# Fet-Bay Marketplace Deployment Test Thu Oct  2 15:52:39 CEST 2025
