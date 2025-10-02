@@ -12,14 +12,38 @@ interface CreateConnectLinkRequest {
 }
 
 serve(async (req) => {
+  console.log('Function started with method:', req.method)
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
+    console.log('Create connect link function started')
+    
+    // Check environment variables
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    
+    console.log('Environment check:', {
+      stripeKey: stripeKey ? 'present' : 'missing',
+      supabaseUrl: supabaseUrl ? 'present' : 'missing', 
+      supabaseKey: supabaseKey ? 'present' : 'missing'
+    })
+    
+    if (!stripeKey || !supabaseUrl || !supabaseKey) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required environment variables' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
     // Initialize Stripe
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+    const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
     })
 
@@ -55,6 +79,8 @@ serve(async (req) => {
       )
     }
 
+    console.log('Checking profile for user:', user.id)
+    
     // Check if user is banned
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
@@ -62,11 +88,34 @@ serve(async (req) => {
       .eq('id', user.id)
       .single()
 
-    if (profileError || !profile) {
+    console.log('Profile check result:', { profile, profileError })
+
+    if (profileError) {
+      console.error('Profile error:', profileError)
+      // Try to create profile if it doesn't exist
+      if (profileError.code === 'PGRST116') {
+        console.log('Profile not found, creating one...')
+        const { error: createError } = await supabaseClient
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email || 'user@example.com',
+            role: 'user'
+          })
+        
+        if (createError) {
+          console.error('Failed to create profile:', createError)
+        } else {
+          console.log('Profile created successfully')
+        }
+      }
+    }
+    
+    if (!profile || !profile.role) {
       return new Response(
-        JSON.stringify({ error: 'Profile not found' }),
+        JSON.stringify({ error: 'Could not determine user role' }),
         { 
-          status: 404, 
+          status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       )
@@ -151,8 +200,16 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error creating connect link:', error)
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    })
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ 
+        error: 'Internal server error',
+        details: error.message || 'Unknown error'
+      }),
       { 
         status: 500, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

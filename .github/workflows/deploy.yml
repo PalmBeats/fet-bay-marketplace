@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn --version
-          yarn install --frozen-lockfile
+          yarn install
           
       - name: Build frontend
         run: |

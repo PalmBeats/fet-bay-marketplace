@@ -16,23 +16,38 @@ type ConnectAccount = Database['public']['Tables']['connect_accounts']['Row']
 
 export default function Account() {
   const navigate = useNavigate()
-  const { user, isBanned } = useAuth()
+  const { user, isBanned, loading: authLoading } = useAuth()
   const [listings, setListings] = useState<Listing[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [connectAccount, setConnectAccount] = useState<ConnectAccount | null>(null)
   const [loading, setLoading] = useState(true)
   const [creatingConnectLink, setCreatingConnectLink] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
+    console.log('Account useEffect - user:', user?.id, 'authLoading:', authLoading)
+    
+    // Wait for auth to finish loading
+    if (authLoading) {
+      console.log('Account: Auth still loading, waiting...')
+      return
+    }
+    
+    // Auth finished loading
     if (!user) {
+      console.log('Account: No user after auth load, redirecting to auth')
       navigate('/auth')
       return
     }
 
+    console.log('Account: User found, fetching data')
     fetchAccountData()
-  }, [user, navigate])
+  }, [user, authLoading, navigate])
 
   const fetchAccountData = async () => {
+    if (!user) return
+    
+    setLoading(true)
     try {
       // Fetch user's listings
       const { data: listingsData, error: listingsError } = await supabase
@@ -94,17 +109,29 @@ export default function Account() {
         return
       }
 
-      const response = await fetch('/functions/v1/create-connect-link', {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      console.log('Creating connect link with token:', session.access_token ? 'present' : 'missing')
+      console.log('Function URL:', `${supabaseUrl}/functions/v1/create-connect-link`)
+      
+      const response = await fetch(`${supabaseUrl}/functions/v1/create-connect-link`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
         },
+        body: JSON.stringify({
+          return_url: window.location.origin + '/account'
+        })
       })
+      
+      console.log('Response status:', response.status)
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()))
 
       const result = await response.json()
+      console.log('Response result:', result)
 
       if (!response.ok) {
+        console.error('Full error response:', result)
         throw new Error(result.error || 'Failed to create connect link')
       }
 
@@ -115,6 +142,35 @@ export default function Account() {
       alert('Failed to create payment setup link. Please try again.')
     } finally {
       setCreatingConnectLink(false)
+    }
+  }
+
+  const handleDeleteListing = async (listingId: string) => {
+    if (!user) return
+
+    const confirmed = confirm('Are you sure you want to delete this listing? This action cannot be undone.')
+    if (!confirmed) return
+
+    setDeletingId(listingId)
+    try {
+      const { error } = await supabase
+        .from('listings')
+        .delete()
+        .eq('id', listingId)
+        .eq('seller_id', user.id) // Security: only delete own listings
+
+      if (error) {
+        throw error
+      }
+
+      // Remove from local state
+      setListings(prev => prev.filter(listing => listing.id !== listingId))
+      alert('Listing deleted successfully!')
+    } catch (error) {
+      console.error('Error deleting listing:', error)
+      alert('Failed to delete listing. Please try again.')
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -239,9 +295,19 @@ export default function Account() {
                       {listing.status}
                     </span>
                   </div>
-                  <Button asChild variant="outline" size="sm">
-                    <Link to={`/listing/${listing.id}`}>View</Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" size="sm">
+                      <Link to={`/listing/${listing.id}`}>View</Link>
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => handleDeleteListing(listing.id)}
+                      disabled={deletingId === listing.id}
+                    >
+                      {deletingId === listing.id ? 'Deleting...' : 'Delete'}
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

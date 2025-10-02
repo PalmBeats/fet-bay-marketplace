@@ -54,7 +54,8 @@ function CheckoutForm({ listing }: { listing: Listing }) {
         return
       }
 
-      const response = await fetch('/functions/v1/create-checkout', {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      const response = await fetch(`${supabaseUrl}/functions/v1/create-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

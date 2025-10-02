@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,6 +13,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { signIn, signUp } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,21 +21,17 @@ export default function Auth() {
     setError('')
 
     try {
+
+
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
+        const { error } = await signIn(email, password)
         if (error) throw error
+        navigate('/')
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        })
+        const { error } = await signUp(email, password)
         if (error) throw error
-        alert('Check your email for the confirmation link!')
+        alert('Sign up successful! You can now sign in.')
       }
-      navigate('/')
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -84,6 +81,17 @@ export default function Auth() {
               {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
             </Button>
           </form>
+          {isLogin && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-800 font-medium mb-2">🔧 Development Mode Test Accounts:</p>
+              <div className="text-xs text-blue-700 space-y-1">
+                <div>• admin@test.com / admin123</div>
+                <div>• admin@test.com / password123</div>
+                <div>• seller1@test.com / seller123</div>
+                <div>• buyer@test.com / buyer123</div>
+              </div>
+            </div>
+          )}
           <div className="mt-4 text-center">
             <Button
               variant="link"
